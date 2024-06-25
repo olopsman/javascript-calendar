@@ -56,7 +56,7 @@ const manipulate = () => {
 
     //loop to add the dates of current month
     for(let i = 1; i <= lastdate; i++) {
-        //check if the date is today
+        //check if the date is today``
         let isToday = i === date.getDate() 
         && month === new Date().getMonth()
         && year === new Date().getFullYear()
