@@ -41,14 +41,13 @@ const manipulate = () => {
     let lastdate = new Date(year, month + 1, 0).getDate();
 
     //get the day of the last date of the month 
-    let dayEnd = new Date(year, month + 1, 0).getDay();
+    let dayEnd = new Date(year, month, lastdate).getDay();
 
     //get the last date of the previous month
     let monthlastdate = new Date(year, month, 0).getDate();
 
     //store the generated calendar HTML
     let lit = "";
-    console.log(dayOne);
 
     //loop through the dates of the previous month
     for(let i = dayOne; i > 0; i--) {
@@ -63,7 +62,12 @@ const manipulate = () => {
         && year === new Date().getFullYear()
         ? "active"
         : "";
-        lit += `<li class="${isToday}">${i - dayEnd + 1}</li>`
+        lit += `<li class="${isToday}">${i}</li>`
+    }
+
+    //get the first few days of the next month
+    for (let i = dayEnd; i < 6; i++) {
+        lit += `<li class="inactive">${i - dayEnd + 1}</li>`;
     }
 
     //update the text of the current date element
