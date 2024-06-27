@@ -6,15 +6,15 @@ export interface ScheduleCategoryButton extends ScheduleCategory {
 }
 
 //add updateActiveCategory prop function to ScheduleCategoryButton
-// export interface CategoryButtonProps extends ScheduleCategoryButton {
-//     updateActiveCategory(entry: ScheduleCategory): void;
-// }
+export interface CategoryButtonProps extends ScheduleCategoryButton {
+    updateActiveCategory(entry: ScheduleCategory): void;
+}
 
 export default function CategoryButton({
-    id,name,fill,stroke,active
-} : ScheduleCategoryButton ) {
+    id,name,fill,stroke,active, updateActiveCategory
+} : CategoryButtonProps ) {
     function handleClick(): void {
-        // updateActiveCategory({ id, name, fill, stroke });
+        updateActiveCategory({ id, name, fill, stroke });
         console.log("button clicked")
     }
 
