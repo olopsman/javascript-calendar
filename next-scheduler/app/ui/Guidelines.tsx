@@ -5,10 +5,10 @@ export default function Guidelines() {
     const hours = useMemo<number[]>(() => getHours(), []);// prevent the getHours from rerendering?
     const ref = useRef<HTMLDivElement>(null); //what does this do
 
-    useEffect(() => {
+    useEffect(() => { 
         setGuides(ref.current as HTMLDivElement);
         setO(ref.current?.getBoundingClientRect().x as number);
-      }, []);
+      }, []); //onMount
 
       return (
         <div ref={ref} className="guidelines">

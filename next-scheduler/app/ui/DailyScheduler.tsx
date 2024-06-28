@@ -5,7 +5,7 @@ import type { ScheduleCategoryButton } from "./CategoryButton";
 import Guidelines from "./Guidelines";
 import { joinSchedules, updateSchedules } from "../lib/utils";
 import NewScheduleTrack from "./NewScheduleTrack";
-
+import Schedules from "./Schedules";
 
 
 function initailCategories(): ScheduleCategoryButton[] {
@@ -58,6 +58,7 @@ export default function DailyScheduler(props: {
           <div className="track">
             <Guidelines />
             <NewScheduleTrack category={activeCategory} addSchedule={addSchedule} />
+            <Schedules items={schedules} />
         </div>
         </div>
       );
