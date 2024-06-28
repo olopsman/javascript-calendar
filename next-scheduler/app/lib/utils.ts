@@ -1,3 +1,5 @@
+import categories from "./schedule-categories";
+
 const LEFT = 1; // ID to define the left side of schedule item
 const RIGHT = 2; // ID to define the left side of schedule item
 const DEFAULT_HOUR_START = 0; // default starting hour of scheduler
@@ -28,6 +30,21 @@ let hours: number[]; // list of hours to be drawn, e.x. [0, 1, 2, …, 0];
 
 let minX: number | null; // minimum horizontal coordinate that a schedule item can extend
 let maxX: number | null; // maximum horizontal coordinate that a schedule item can extend
+
+export const initialSchedules = [
+  {
+    id: 1,
+    start: "2024-01-01 00:00:00",
+    end: "2024-01-01 07:00:00",
+    category_id: 1,
+  },
+  {
+    id: 2,
+    start: "2024-01-01 09:00:00",
+    end: "2024-01-01 12:30:00",
+    category_id: 2,
+  },
+];
 
 export function init(dateString: string, hour: number): void {
   setHours(hour);
@@ -322,4 +339,138 @@ export function getSchedules(): Schedule[] {
 
 export function getTrash(): number[] {
   return trash;
+}
+
+export function joinSchedulesOnUpdate(
+  schedule: ScheduleItemIndexable
+): ScheduleItem[] {
+  const { index } = schedule;
+  let modified = false;
+
+  for (let i = 0; i < schedules.length; i++) {
+    if (schedule.category_id !== schedules[i].category_id) continue;
+    if (schedule.end === schedules[i].start) {
+      schedules[i].start = schedule.start;
+      modified = true;
+      break;
+    }
+    if (schedule.start === schedules[i].end) {
+      schedules[i].end = schedule.end;
+      modified = true;
+      break;
+    }
+  }
+
+  if (modified) {
+    addTrash(schedules[index]);
+    schedules.splice(index, 1);
+  } else {
+    const { index, ...newSchedule } = schedule;
+    schedules[index] = newSchedule;
+  }
+
+  return [...schedules];
+}
+
+export function getDragging(): boolean {
+  return dragging;
+}
+
+export function getStartAndEndOnSchedule(
+  start: number,
+  end: number,
+  x2: number
+): { start: number; end: number } {
+  x1 = x1 as number;
+  minX = minX as number;
+  maxX = maxX as number;
+  x2 = o + snapToGuide(x2 - o);
+  const dx = x2 - x1;
+
+  if (dragPosition === 1) {
+    start += dx;
+
+    if (start < minX) start = minX;
+    if (start > maxX) start = maxX;
+  } else if (dragPosition === 2) {
+    end += dx;
+
+    if (end < minX) end = minX;
+    if (end > maxX) end = maxX;
+  }
+
+  return { start, end };
+}
+
+export function setHorizonOnEntry(x: number): void {
+  minX = 0;
+  maxX = guides[guides.length - 1];
+
+  const start = x - o;
+  let c = schedules[0];
+
+  function isCurrent(schedule: ScheduleItem): boolean {
+    const _start = schedule.start;
+    const _end = schedule.end;
+
+    return start >= _start && start <= _end;
+  }
+
+  if (dragPosition === LEFT) {
+    for (let i = 0; i < schedules.length; i++) {
+      if (isCurrent(schedules[i])) {
+        c = schedules[i];
+        continue;
+      }
+      if (start <= schedules[i].start) continue;
+      if (minX <= schedules[i].end) minX = schedules[i].end;
+    }
+
+    const i = guides.indexOf(c.end);
+    maxX = guides[i - 1];
+  } else if (dragPosition === RIGHT) {
+    for (let i = 0; i < schedules.length; i++) {
+      if (isCurrent(schedules[i])) {
+        c = schedules[i];
+        continue;
+      }
+      if (start >= schedules[i].end) continue;
+      if (maxX >= schedules[i].start) maxX = schedules[i].start;
+    }
+
+    const i = guides.indexOf(c.start);
+    minX = guides[i + 1];
+  }
+}
+
+export function convertSchedules(ss: Schedule[]): ScheduleItem[] {
+  if (ss.length === 0) return [];
+
+  let s: Schedule;
+  const sss = new Array(ss.length);
+
+  function findIndexStart(datetime: string) {
+    return datetime === s.start;
+  }
+
+  function findIndexEnd(datetime: string) {
+    return datetime === s.end;
+  }
+
+  function findCategory(c: ScheduleCategory) {
+    return c.id === s.category_id;
+  }
+
+  for (let i = 0; i < ss.length; i++) {
+    s = ss[i];
+    delete s.user_id;
+    const index1 = datetimes.findIndex(findIndexStart);
+    const index2 = datetimes.findIndex(findIndexEnd);
+    const start = guides[index1];
+    const end = guides[index2];
+    const category = categories.find(findCategory);
+    sss[i] = { ...s, start, end, category };
+  }
+
+  return sss;
 }

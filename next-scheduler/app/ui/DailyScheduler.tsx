@@ -3,7 +3,7 @@ import scheduleCategories from "../lib/schedule-categories";
 import CategoryButtons from "./CategoryButtons";
 import type { ScheduleCategoryButton } from "./CategoryButton";
 import Guidelines from "./Guidelines";
-import { joinSchedules, updateSchedules } from "../lib/utils";
+import { joinSchedules, updateSchedules, joinSchedulesOnUpdate, addTrash, convertSchedules } from "../lib/utils";
 import NewScheduleTrack from "./NewScheduleTrack";
 import Schedules from "./Schedules";
 
@@ -49,6 +49,17 @@ export default function DailyScheduler(props: {
         setActiveCategory(category);
       }
 
+    function updateSchedule(schedule: ScheduleItemIndexable): void {
+        const ss = joinSchedulesOnUpdate(schedule);
+        setSchedules(ss);
+    }  
+
+    function removeSchedule(index: number): void {
+        addTrash(schedules[index]);
+        schedules.splice(index, 1);
+        setSchedules([...schedules]);
+      }
+
       return (
         <div className="daily-scheduler">
           <CategoryButtons
@@ -58,7 +69,11 @@ export default function DailyScheduler(props: {
           <div className="track">
             <Guidelines />
             <NewScheduleTrack category={activeCategory} addSchedule={addSchedule} />
-            <Schedules items={schedules} />
+            <Schedules
+          items={schedules}
+          updateSchedule={updateSchedule}
+          removeSchedule={removeSchedule}
+        />
         </div>
         </div>
       );
