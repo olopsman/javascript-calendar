@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import scheduleCategories from "../lib/schedule-categories";
 import CategoryButtons from "./CategoryButtons";
 import type { ScheduleCategoryButton } from "./CategoryButton";
 import Guidelines from "./Guidelines";
+import { joinSchedules, updateSchedules } from "../lib/utils";
+import NewScheduleTrack from "./NewScheduleTrack";
 
 
 
@@ -24,6 +26,15 @@ export default function DailyScheduler(props: {
     const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
     const [categories, setCategories] = useState(initailCategories);
     const [activeCategory, setActiveCategory] = useState(categories[0]); 
+
+    function addSchedule(schedule: ScheduleItem): void {
+        const ss = joinSchedules([...schedules, schedule]);
+        setSchedules(ss);
+      }
+
+      useEffect(() => {
+        updateSchedules(schedules);
+      }, [schedules]);
     
     function updateActiveCategory(category: ScheduleCategory): void {
         const length = categories.length;
@@ -46,6 +57,7 @@ export default function DailyScheduler(props: {
           />
           <div className="track">
             <Guidelines />
+            <NewScheduleTrack category={activeCategory} addSchedule={addSchedule} />
         </div>
         </div>
       );
