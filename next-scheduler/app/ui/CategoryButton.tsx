@@ -19,7 +19,7 @@ export default function CategoryButton({
     }
 
     return (
-        <button
+      <button
       className={"category-button" + (active ? " on" : "")}
       type="button"
       onClick={handleClick}

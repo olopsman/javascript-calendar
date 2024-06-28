@@ -1,15 +1,13 @@
 
 'use client';
 import DailyScheduler from "./ui/DailyScheduler";
+import { init } from "./lib/utils";
 
 export default function Home() {
-  const updateAss = () => {
-    console.log("update")
-  }
+  init("2024-01-01", 0);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>Scheduler</div>
+    <div className="App">
       <DailyScheduler />
-    </main>
+    </div>
   );
 }

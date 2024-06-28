@@ -2,6 +2,9 @@ import { useState } from "react";
 import scheduleCategories from "../lib/schedule-categories";
 import CategoryButtons from "./CategoryButtons";
 import type { ScheduleCategoryButton } from "./CategoryButton";
+import Guidelines from "./Guidelines";
+
+
 
 function initailCategories(): ScheduleCategoryButton[] {
     const categories: ScheduleCategoryButton[] = [...scheduleCategories];
@@ -41,6 +44,9 @@ export default function DailyScheduler(props: {
             items={categories}
             updateActiveCategory={updateActiveCategory}
           />
+          <div className="track">
+            <Guidelines />
+        </div>
         </div>
       );
 }
