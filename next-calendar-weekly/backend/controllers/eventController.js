@@ -85,3 +85,5 @@ const updateEvent = async (req, res) => {
 
     res.status(200).json(event);
 }
+
+export { getEvents, getEvent, createEvent, deleteEvent, updateEvent };

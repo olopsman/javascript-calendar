@@ -1,19 +1,18 @@
 "use client";
-import { persistor, store } from "../redux/configureStore";
-import { PersistGate } from "redux-persist/integration/react";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import theme from "../theme";
-import { Provider } from "react-redux";
+import BaseCalendar from "./ui/base-calendar";
+
+
+// const mapState = ({ eventsData }: { eventsData: any }) => ({
+//   events: eventsData.events,
+// });
 
 export default function Home() {
+  // const { events } = useSelector(mapState);
+
+  //this is data retrieved from the db?
+  const calendarEvents:any = [];
+
   return (
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <h1>Hello World</h1>
-          </ThemeProvider>
-        </PersistGate>
-      </Provider>
+      <BaseCalendar height="100vh" events={calendarEvents} />
   );
 }
